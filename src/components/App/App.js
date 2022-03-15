@@ -68,7 +68,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        {/* <Appbar /> */}
+        <Appbar />
         <div className="App-body">
           <div className="App-section">
             <Transaction />
