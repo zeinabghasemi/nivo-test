@@ -4,69 +4,90 @@
   width           : 100%;
   height          : 100%;
 }
-.report {
+
+.report-block {
   padding         : 20px;
   background-color: #38495d;
-  height          : 270px;
+  height          : 250px;
 }
-.details {
-  background-color: white;
-  width           : 100%;
-  height          : 200px;
-}
+
 .paper {
   padding         : 5px 25px 5px 25px;
-  text-align      : center;
-  color           : black;
+  text-align      : start;
+  color           : white;
   border-radius   : 16px;
   margin          : 10px 10px 0px 10px;
   cursor          : pointer;
 }
+
 .whole {
   padding         : 0px 5px 0px 0px;
   text-align      : start;
   color           : white;
   border-radius   : 16px;
-  cursor          : pointer;
 }
+
 .received-color {
-  background-color: #99f7ab;
+  background-color: #20aaea;
 }
+
 .payment-color {
-  background-color: #ffa2a2;
+  background-color: #ec353c;
 }
+
 .title {
-  font-size       : 20px;
-  font-weight     : bold;
-}
-.sum {
   font-size       : 18px;
 }
-.excel-blocl {
-  margin-top      : 10px;
+
+.sum {
+  font-size       : 16px;
+}
+
+.buttons-block {
+  margin          : 10px;
+  background-color: white;
   display         : flex;
-  justify-content : center;
+  justify-content : flex-start;
   align-items     : center;
 }
-.excel {
-  padding          : 0px 5px 0px 0px;
-  font-size        : 20px !important;
-  text-align       : start;
-  background-color : #2F65A2 !important;
-  border-radius    : 8px !important;
-  cursor           : pointer;
+
+.icon-button {
+  margin-left     : 20px !important;
+  padding         : 0px 5px 0px 0px;
+  font-size       : 16px !important;
+  font-family     : IRANSans !important;
+  text-align      : start;
+  background-color: #377e20 !important;
+  border-radius   : 8px !important;
+  cursor          : pointer;
 }
-.excel-icon {
-  margin-left      : 10px;
-  font-size        : 22px !important;
+
+.transaction-block {
+  background-color: white;
+  min-height      : 350px;
 }
 
 @media screen and (max-width: 1100px) {
   .paper {
-    margin         : 10px 5px 0px 5px;
-    padding        : 5px 5px 20px 5px;
+    margin        : 10px 5px 0px 5px;
+    padding       : 5px 5px 20px 5px;
   }
-  .sum {
-    font-size      : 18px;
+
+  .icon-button {
+    font-size     : 14px !important;
+  }
+
+  .paper {
+    padding       : 5px 10px 5px 10px;
+    margin-left   : 5px;
+  }
+
+  .title {
+    font-size     : 16px;
+  }
+
+  .report-block {
+    padding       : 20px 5px;
+    height        : 220px;
   }
 }
