@@ -39,6 +39,11 @@ const faMonths = [
   'اسفند',
 ];
 
+const initialDateState = {
+  monthHead: Number(moment(Date.now()).format('jMM')),
+  yearHead: Number(moment(Date.now()).format('jYYYY')),
+};
+
 const useStyles = makeStyles((theme) => ({
 
   dialog: {
@@ -59,6 +64,9 @@ export default function Transaction() {
   const classes = useStyles();
   const [openItems, setOpenItems] = React.useState(false);
   const [open, setOpen] = React.useState(false);
+  const [dateState, setDateState] = React.useState(initialDateState);
+
+  console.log(dateState)
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -75,39 +83,34 @@ export default function Transaction() {
   const handleClose = () => {
     setOpen(false);
   };
-  // console.log(moment(new Date("12-01-2022")).month()); // 0 - 11
-  // console.log(moment(new Date("12-01-2022")).format('jYYYY/jMM/jDD'));
-  // console.log(moment(Date.now()).format('jYYYY/jMM/jDD'));
-  const currentJalaliMonth = Number(moment(Date.now()).format('jMM'));
-  const currentJalaliYear = Number(moment(Date.now()).format('jYYYY'));
-  console.log(currentJalaliMonth); // 1 - 12
-
-  let monthHead = currentJalaliMonth;
-  let yearHead = currentJalaliYear;
 
   function nextMonth() {
-    if (monthHead < 12) {
-      monthHead = monthHead + 1;
+    if (dateState.monthHead < 12) {
+      dateState.monthHead = dateState.monthHead + 1;
     } else {
-      yearHead = yearHead + 1;
-      monthHead = 1;
+      dateState.yearHead = dateState.yearHead + 1;
+      dateState.monthHead = 1;
     }
+
+    setDateState();
   }
 
   function prevMonth() {
-    if (monthHead > 1) {
-      monthHead = monthHead - 1;
+    if (dateState.monthHead > 1) {
+      dateState.monthHead = dateState.monthHead - 1;
     } else {
-      yearHead = yearHead - 1;
-      monthHead = 12;
+      dateState.yearHead = dateState.yearHead - 1;
+      dateState.monthHead = 12;
     }
+
+    setDateState();
   }
 
   function get3Month() {
     return [
-      monthHead == 1 ? 12 : monthHead - 1,
-      monthHead,
-      monthHead == 12 ? 1 : monthHead + 1,
+      dateState.monthHead == 1 ? 12 : dateState.monthHead - 1,
+      dateState.monthHead,
+      dateState.monthHead == 12 ? 1 : dateState.monthHead + 1,
     ];
   }
 
@@ -126,22 +129,22 @@ export default function Transaction() {
           className="arrow-icon-button"
           startIcon={<ArrowForwardIosIcon id="next-month" className="icons-style" />}
           variant="contained"
-          onClick={() => { }}
+          onClick={nextMonth}
         >
           {getFaMonth(mNext)}
         </Button>
         <div
           className="arrow-icon-button this-month"
         >
-          همین ماه
+          {getFaMonth(mCurrent)}
         </div>
         <Button
           className="arrow-icon-button"
           variant="contained"
           endIcon={<ArrowBackIosNewIcon className="icons-style" />}
-          onClick={() => { }}
+          onClick={prevMonth}
         >
-          ماه قبل
+          {getFaMonth(mBefore)}
         </Button>
       </div>
       <div className="report-block">
