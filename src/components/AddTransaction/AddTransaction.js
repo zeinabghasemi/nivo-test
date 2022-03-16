@@ -19,7 +19,7 @@ import {
   deleteTransaction,
   listData,
 } from '../../app/dataSlice';
-import { TransactionModel } from '../../app/models';
+import { TransactionModel, getNextTransactionSequenceId } from '../../app/models';
 
 export default function AddTransaction() {
   const dispatch = useDispatch();
@@ -105,7 +105,7 @@ export default function AddTransaction() {
           variant="contained"
           onClick={() => {
             dispatch(addTransaction(new TransactionModel(
-              5,
+              getNextTransactionSequenceId(),
               "paid",
               state.price,
               state.note,

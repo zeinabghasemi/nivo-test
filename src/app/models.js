@@ -1,3 +1,10 @@
+let seq = 0;
+
+export function getNextTransactionSequenceId() {
+  seq++;
+  return seq;
+}
+
 export class TransactionModel {
   constructor(
     id,

@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { TransactionModel } from './models';
+import { TransactionModel, getNextTransactionSequenceId } from './models';
 
 const data = TransactionModel.fromJsonArray([
   {
-    id: 1,
+    id: getNextTransactionSequenceId(),
     type: "paid",
     price: 200000,
     note: "200000 paid",
@@ -14,7 +14,7 @@ const data = TransactionModel.fromJsonArray([
     day: 1,
   },
   {
-    id: 2,
+    id: getNextTransactionSequenceId(),
     type: "paid",
     price: 200000,
     note: "200000 paid",
@@ -24,7 +24,7 @@ const data = TransactionModel.fromJsonArray([
     day: 1,
   },
   {
-    id: 3,
+    id: getNextTransactionSequenceId(),
     type: "paid",
     price: 200000,
     note: "200000 paid",
@@ -34,7 +34,7 @@ const data = TransactionModel.fromJsonArray([
     day: 2,
   },
   {
-    id: 4,
+    id: getNextTransactionSequenceId(),
     type: "paid",
     price: 200000,
     note: "200000 paid",
