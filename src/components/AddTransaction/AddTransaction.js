@@ -12,90 +12,119 @@ import ClearIcon from "@material-ui/icons/Clear";
 // import { DatePicker } from "jalali-react-datepicker";
 import "./AddTransaction.css";
 
-class AddTransaction extends Component {
-  render() {
-    return (
-      <List className="dialog-list">
-        <div className="item-align">
-          <b>تراکنش جدید</b>
-        </div>
-        <div className="date-section" onClick={() => {}}>
-          <CalendarTodayIcon className="calendar" />
-          <TextField
-            disabled
-            className="textField-style"
-            id="standard-size-normal"
-            defaultValue="1370/02/02"
-            variant="standard"
-          />
-        </div>
-        <Divider />
-        <RadioGroup
-          className="radio-group"
-          row
-          aria-labelledby="demo-row-radio-buttons-group-label"
-          name="row-radio-buttons-group"
-        >
-          <FormControlLabel
-          className="pppp"
-            value="paid"
-            control={<Radio color="success" />}
-            label="پرداخت"
-          />
-          <FormControlLabel
-            value="recieved"
-            control={<Radio color="success" />}
-            label="دریافت"
-          />
-          <FormControlLabel
-            value="change"
-            control={<Radio color="success" />}
-            label="جیب به جیب"
-          />
-        </RadioGroup>
-        <Divider />
-        <div className="price-section">
-          <p>مبلغ:</p>
-          <TextField
-            id="standard-size-normal"
-            defaultValue=""
-            variant="standard"
-            className="price-textField-style"
-          />
-        </div>
-        <Divider />
-        <div className="note-section">
-          <p>یادداشت:</p>
-          <TextField
-            id="outlined-multiline-static"
-            multiline
-            rows={2}
-            variant="standard"
-            defaultValue=""
-            className="note-textField-style"
-          />
-        </div>
-        <div className="actions-block">
-          <Button
-            className="ok-icon-button"
-            startIcon={<CheckIcon className="icons-style" />}
-            variant="contained"
-            onClick={() => {}}
-          >
-            تایید
-          </Button>
-          <Button
-            className="cancel-icon-button"
-            startIcon={<ClearIcon className="icons-style" />}
-            variant="contained"
-            onClick={() => {}}
-          >
-            لغو
-          </Button>
-        </div>
-      </List>
-    );
-  }
-}
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  addTransaction,
+  updateTransaction,
+  deleteTransaction,
+  listData,
+  TransactionModel,
+} from '../../data';
 
-export default AddTransaction;
+export default function AddTransaction() {
+  const dispatch = useDispatch();
+  const [state, setState] = React.useState({ price: 0, note: '' });
+
+  const handlePrice = (event) => {
+    setState({ price: Number(event.target.value) });
+  }
+
+  const handleNote = (event) => {
+    setState({ note: event.target.value });
+  }
+
+  return (
+    <List className="dialog-list">
+      <div className="item-align">
+        <b>تراکنش جدید</b>
+      </div>
+      <div className="date-section" onClick={() => { }}>
+        <CalendarTodayIcon className="calendar" />
+        <TextField
+          disabled
+          className="textField-style"
+          id="standard-size-normal"
+          defaultValue="1370/02/02"
+          variant="standard"
+        />
+      </div>
+      <Divider />
+      <RadioGroup
+        className="radio-group"
+        row
+        aria-labelledby="demo-row-radio-buttons-group-label"
+        name="row-radio-buttons-group"
+      >
+        <FormControlLabel
+          className="pppp"
+          value="paid"
+          control={<Radio color="success" />}
+          label="پرداخت"
+        />
+        <FormControlLabel
+          value="recieved"
+          control={<Radio color="success" />}
+          label="دریافت"
+        />
+        <FormControlLabel
+          value="change"
+          control={<Radio color="success" />}
+          label="جیب به جیب"
+        />
+      </RadioGroup>
+      <Divider />
+      <div className="price-section">
+        <p>مبلغ:</p>
+        <TextField
+          id="standard-size-normal"
+          defaultValue=""
+          variant="standard"
+          className="price-textField-style"
+          onChange={handlePrice}
+        />
+      </div>
+      <Divider />
+      <div className="note-section">
+        <p>یادداشت:</p>
+        <TextField
+          id="outlined-multiline-static"
+          multiline
+          rows={2}
+          variant="standard"
+          defaultValue=""
+          className="note-textField-style"
+          onChange={handleNote}
+        />
+      </div>
+      <div className="actions-block">
+        <Button
+          className="ok-icon-button"
+          startIcon={<CheckIcon className="icons-style" />}
+          variant="contained"
+          onClick={() => {
+            dispatch(addTransaction(new TransactionModel(
+              5,
+              "paid",
+              state.price,
+              state.note,
+              "سرگرمی",
+              1400,
+              12,
+              1,
+            ).toJson()));
+          }}
+        >
+          تایید
+        </Button>
+        <Button
+          className="cancel-icon-button"
+          startIcon={<ClearIcon className="icons-style" />}
+          variant="contained"
+          onClick={() => { }}
+        >
+          لغو
+        </Button>
+      </div>
+    </List>
+  );
+}

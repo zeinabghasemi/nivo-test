@@ -1,19 +1,43 @@
 import React from "react";
+import "./Transaction.css";
+import moment from "moment-jalaali";
+import List from '@mui/material/List';
+import Slide from '@mui/material/Slide';
 import Grid from "@material-ui/core/Grid";
 import Button from "@mui/material/Button";
-import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import ArrowBackIosNewIcon from '@material-ui/icons/ArrowBackIos';
-import Slide from '@mui/material/Slide';
 import { makeStyles, Dialog } from '@material-ui/core'
-import DailyTransactionsSection from "../DailyTransactionsSection/DailyTransactions";
 import AddTransaction from "../AddTransaction/AddTransaction";
-import "./Transaction.css";
+import ArrowBackIosNewIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import DailyTransactionsSection from "../DailyTransactionsSection/DailyTransactions";
+
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  addTransaction,
+  updateTransaction,
+  deleteTransaction,
+  listData,
+} from '../../data';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
+const faMonths = [
+  'فروردین',
+  'اردیبهشت',
+  'خرداد',
+  'تیر',
+  'مرداد',
+  'شهریور',
+  'مهر',
+  'آبان',
+  'آذر',
+  'دی',
+  'بهمن',
+  'اسفند',
+];
 
 const useStyles = makeStyles((theme) => ({
 
@@ -29,6 +53,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Transaction() {
+  const data = useSelector(listData);
+  const dispatch = useDispatch();
+  console.log('aaa', data);
   const classes = useStyles();
   const [openItems, setOpenItems] = React.useState(false);
   const [open, setOpen] = React.useState(false);
@@ -48,16 +75,60 @@ export default function Transaction() {
   const handleClose = () => {
     setOpen(false);
   };
+  // console.log(moment(new Date("12-01-2022")).month()); // 0 - 11
+  // console.log(moment(new Date("12-01-2022")).format('jYYYY/jMM/jDD'));
+  // console.log(moment(Date.now()).format('jYYYY/jMM/jDD'));
+  const currentJalaliMonth = Number(moment(Date.now()).format('jMM'));
+  const currentJalaliYear = Number(moment(Date.now()).format('jYYYY'));
+  console.log(currentJalaliMonth); // 1 - 12
+
+  let monthHead = currentJalaliMonth;
+  let yearHead = currentJalaliYear;
+
+  function nextMonth() {
+    if (monthHead < 12) {
+      monthHead = monthHead + 1;
+    } else {
+      yearHead = yearHead + 1;
+      monthHead = 1;
+    }
+  }
+
+  function prevMonth() {
+    if (monthHead > 1) {
+      monthHead = monthHead - 1;
+    } else {
+      yearHead = yearHead - 1;
+      monthHead = 12;
+    }
+  }
+
+  function get3Month() {
+    return [
+      monthHead == 1 ? 12 : monthHead - 1,
+      monthHead,
+      monthHead == 12 ? 1 : monthHead + 1,
+    ];
+  }
+
+  function getFaMonth(m) {
+    return faMonths[m - 1];
+  }
+
+  const [mBefore, mCurrent, mNext] = get3Month();
+  console.log(getFaMonth(mBefore))
+  console.log(getFaMonth(mCurrent))
+  console.log(getFaMonth(mNext))
   return (
     <div className="main">
       <div className="month-parts">
         <Button
           className="arrow-icon-button"
-          startIcon={<ArrowForwardIosIcon className="icons-style" />}
+          startIcon={<ArrowForwardIosIcon id="next-month" className="icons-style" />}
           variant="contained"
           onClick={() => { }}
         >
-          ماه بعد
+          {getFaMonth(mNext)}
         </Button>
         <div
           className="arrow-icon-button this-month"
@@ -128,7 +199,6 @@ export default function Transaction() {
           }}
           open={openItems}
           onClose={HandleCloseItems}
-
           TransitionComponent={Transition}
         >
           <List className="dialog">
