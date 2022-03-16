@@ -92,7 +92,7 @@ export default function Transaction() {
       dateState.monthHead = 1;
     }
 
-    setDateState();
+    setDateState({ ...dateState });
   }
 
   function prevMonth() {
@@ -103,7 +103,7 @@ export default function Transaction() {
       dateState.monthHead = 12;
     }
 
-    setDateState();
+    setDateState({ ...dateState });
   }
 
   function get3Month() {
@@ -136,7 +136,7 @@ export default function Transaction() {
         <div
           className="arrow-icon-button this-month"
         >
-          {getFaMonth(mCurrent)}
+          {getFaMonth(mCurrent) + ' ' + dateState.yearHead}
         </div>
         <Button
           className="arrow-icon-button"

@@ -25,12 +25,14 @@ export default function AddTransaction() {
   const dispatch = useDispatch();
   const [state, setState] = React.useState({ price: 0, note: '' });
 
+  console.log(state)
+
   const handlePrice = (event) => {
-    setState({ price: Number(event.target.value) });
+    setState({ ...state, price: Number(event.target.value) });
   }
 
   const handleNote = (event) => {
-    setState({ note: event.target.value });
+    setState({ ...state, note: event.target.value });
   }
 
   return (
