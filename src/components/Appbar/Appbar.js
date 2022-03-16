@@ -12,7 +12,7 @@ import "./Appbar.css";
 
 export default function Appbar() {
   return (
-    <AppBar position="static" className="appbarStyle">
+      <AppBar className="appbarStyle" position="fixed">
       <Toolbar>
         <div className="sectionDesktop">
           <IconButton

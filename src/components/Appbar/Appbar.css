@@ -35,18 +35,18 @@
 
 @media screen and (max-width: 1100px) {
   .sectionDesktop {
-    display          : none;
+    display           : none;
   }
 
   .sectionMobile {
-    display         : flex;
+    display           : flex;
   }
 
   .appbarStyle {
-    background-color: #ebeff0 !important;
+    background-color  : #ebeff0 !important;
   }
 
   h5{
-    color           : black;
+    color             : black;
   }
 }

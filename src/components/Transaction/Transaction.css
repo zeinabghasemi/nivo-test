@@ -67,27 +67,53 @@
   min-height      : 350px;
 }
 
-@media screen and (max-width: 1100px) {
+.dialog{
+  height          : 300px;
+  width           : 600px;
+}
+
+.clickable{
+  cursor          : pointer;
+}
+
+.align{
+  text-align: center !important;
+  padding         : 23px;
+  font-size       : 18px;
+}
+
+@media screen and (max-width: 1100px){
   .paper {
-    margin        : 10px 5px 0px 5px;
-    padding       : 5px 5px 20px 5px;
+    margin       : 10px 5px 0px 5px;
+    padding      : 5px 5px 20px 5px;
   }
 
   .icon-button {
-    font-size     : 14px !important;
+    font-size    : 14px !important;
   }
 
   .paper {
-    padding       : 5px 10px 5px 10px;
-    margin-left   : 5px;
+    padding      : 5px 10px 5px 10px;
+    margin-left  : 5px;
   }
 
   .title {
-    font-size     : 16px;
+    font-size    : 16px;
   }
 
   .report-block {
-    padding       : 20px 5px;
-    height        : 220px;
+    padding      : 20px 5px;
+    height       : 220px;
   }
+}
+@media screen and (max-width: 600px) {
+  .dialog {
+    height       : 200px;
+    width        : 300px;
+  }
+
+  .align{
+    padding      : 12px;
+  }
+  
 }
