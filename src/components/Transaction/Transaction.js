@@ -18,7 +18,7 @@ import {
   updateTransaction,
   deleteTransaction,
   listData,
-} from '../../data';
+} from '../../app/dataSlice';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;

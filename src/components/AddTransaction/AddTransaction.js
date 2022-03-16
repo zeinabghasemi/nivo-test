@@ -18,8 +18,8 @@ import {
   updateTransaction,
   deleteTransaction,
   listData,
-  TransactionModel,
-} from '../../data';
+} from '../../app/dataSlice';
+import { TransactionModel } from '../../app/models';
 
 export default function AddTransaction() {
   const dispatch = useDispatch();
