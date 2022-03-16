@@ -14,7 +14,11 @@
 }
 
 .note-textField-style {
-    width         : 100%;
+  width           : 100%;
+}
+
+.this-month {
+  font-size       : 16px;
 }
 
 .price-textField-style {
@@ -33,6 +37,10 @@
 
 .price-section{
   display         : flex;
+}
+
+.MuiTypography-body1 , .MuiInput-input{
+ font-family: IRANSans !important;
 }
 
 .radio-group {
@@ -76,7 +84,7 @@
 
 @media screen and (max-width: 600px) {
   .dialog-list {
-    height        : 370px;
+    height        : 430px;
     width         : 300px;
   }
 }

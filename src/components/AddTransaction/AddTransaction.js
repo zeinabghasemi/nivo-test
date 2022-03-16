@@ -9,7 +9,6 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Button from "@mui/material/Button";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
-import FormLabel from "@mui/material/FormLabel";
 // import { DatePicker } from "jalali-react-datepicker";
 import "./AddTransaction.css";
 
@@ -38,6 +37,7 @@ class AddTransaction extends Component {
           name="row-radio-buttons-group"
         >
           <FormControlLabel
+          className="pppp"
             value="paid"
             control={<Radio color="success" />}
             label="پرداخت"

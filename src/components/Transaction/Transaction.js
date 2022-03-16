@@ -3,6 +3,8 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@mui/material/Button";
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import ArrowBackIosNewIcon from '@material-ui/icons/ArrowBackIos';
 import Slide from '@mui/material/Slide';
 import { makeStyles, Dialog } from '@material-ui/core'
 import DailyTransactionsSection from "../DailyTransactionsSection/DailyTransactions";
@@ -48,6 +50,29 @@ export default function Transaction() {
   };
   return (
     <div className="main">
+      <div className="month-parts">
+        <Button
+          className="arrow-icon-button"
+          startIcon={<ArrowForwardIosIcon className="icons-style" />}
+          variant="contained"
+          onClick={() => { }}
+        >
+          ماه بعد
+        </Button>
+        <div
+          className="arrow-icon-button this-month"
+        >
+          همین ماه
+        </div>
+        <Button
+          className="arrow-icon-button"
+          variant="contained"
+          endIcon={<ArrowBackIosNewIcon className="icons-style" />}
+          onClick={() => { }}
+        >
+          ماه قبل
+        </Button>
+      </div>
       <div className="report-block">
         <Grid container alignContent="space-around">
           <Grid item xs={6}>
