@@ -45,7 +45,7 @@ const data = TransactionModel.fromJsonArray([
   },
   {
     id: getNextTransactionSequenceId(),
-    type: "paid",
+    type: "recieved",
     price: 600000,
     note: "600000 paid",
     category: "سرگرمی",

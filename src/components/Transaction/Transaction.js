@@ -44,6 +44,11 @@ const initialDateState = {
   monthHead: Number(moment(Date.now()).format("jMM")),
   yearHead: Number(moment(Date.now()).format("jYYYY")),
 };
+const initialFilterState = {
+  paidState: false,
+  recievedState: false,
+};
+
 
 const useStyles = makeStyles((theme) => ({
   dialog: {
@@ -66,6 +71,7 @@ export default function Transaction() {
   const [openItems, setOpenItems] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [dateState, setDateState] = React.useState(initialDateState);
+  const [filterState, setFilterState] = React.useState(initialFilterState);
   const date = moment(Date.now()).format("jYYYY/jMM/jDD");
   const handleClickOpen = () => {
     setOpen(true);
@@ -88,24 +94,73 @@ export default function Transaction() {
     var recievedSum = 0;
     monthData.splice(0, monthData.length);
     days.clear();
-    data.map((tr) => {
-      if (
-        tr["year"] == dateState.yearHead &&
-        tr["month"] == dateState.monthHead
-      ) {
-        monthData.push(tr);
-      }
-    });
-    monthData.map((m) => {
-      days.add(m["day"])
-      if (m["type"] == "paid") {
-        paidSum = paidSum + m["price"];
-      }
-      if (m["type"] == "recieved") {
-        recievedSum = recievedSum + m["price"];
-      }
+    if (filterState.paidState == false && filterState.recievedState == false) {
+      data.map((tr) => {
+        if (
+          tr["year"] == dateState.yearHead &&
+          tr["month"] == dateState.monthHead
+        ) {
+          monthData.push(tr);
+        }
+      });
 
-    });
+      monthData.map((m) => {
+        days.add(m["day"])
+        if (m["type"] == "paid") {
+          paidSum = paidSum + m["price"];
+        }
+        if (m["type"] == "recieved") {
+          recievedSum = recievedSum + m["price"];
+        }
+
+      });
+    } else if (filterState.paidState == true && filterState.recievedState == false) {
+      data.map((tr) => {
+        if (
+          tr["year"] == dateState.yearHead &&
+          tr["month"] == dateState.monthHead &&
+          tr["type"] == "paid"
+
+        ) {
+          monthData.push(tr);
+        }
+      });
+
+      monthData.map((m) => {
+        days.add(m["day"])
+        if (m["type"] == "paid") {
+          paidSum = paidSum + m["price"];
+        }
+        if (m["type"] == "recieved") {
+          recievedSum = recievedSum + m["price"];
+        }
+
+      });
+
+    } else if (filterState.paidState == false && filterState.recievedState == true) {
+      data.map((tr) => {
+        if (
+          tr["year"] == dateState.yearHead &&
+          tr["month"] == dateState.monthHead &&
+          tr["type"] == "recieved"
+
+        ) {
+          monthData.push(tr);
+        }
+      });
+
+      monthData.map((m) => {
+        days.add(m["day"])
+        if (m["type"] == "paid") {
+          paidSum = paidSum + m["price"];
+        }
+        if (m["type"] == "recieved") {
+          recievedSum = recievedSum + m["price"];
+        }
+
+      });
+    }
+
     return [monthData, monthData.length, days, paidSum, recievedSum];
   }
   const [mData, mDataLength, daysSet, pSum, rSum] = monthDataGenerate();
@@ -154,6 +209,22 @@ export default function Transaction() {
     return faMonths[m - 1];
   }
 
+  function optionPressed(filter) {
+    if (filterState.paidState == false && filterState.recievedState == false) {
+      if (filter == "paid") {
+        filterState.paidState = true
+      } else {
+        filterState.recievedState = true
+      }
+
+    } else if (filterState.paidState == false && filterState.recievedState == true) {
+      filterState.recievedState = false;
+    } else if (filterState.paidState == true && filterState.recievedState == false) {
+      filterState.paidState = false;
+    }
+    setFilterState({ ...filterState });
+  }
+
   const [mBefore, mCurrent, mNext] = get3Month();
   return (
     <div className="main">
@@ -183,17 +254,15 @@ export default function Transaction() {
       <div className="report-block">
         <Grid container alignContent="space-around">
           <Grid item xs={6}>
-            <div className={"paper payment-color"}>
+            <div onClick={() => { optionPressed("paid") }} className={"paper payment-color"}>
               <h3 className="title">پرداختی دوره</h3>
               <p className="sum">{pSum} تومان</p>
             </div>
           </Grid>
           <Grid item xs={6}>
-            <div onClick={() => alert("Hello from here")}>
-              <div className={"paper received-color"}>
-                <h3 className="title">دریافتی دوره</h3>
-                <p className="sum"> {rSum} تومان</p>
-              </div>
+            <div onClick={() => { optionPressed("recieved") }} className={"paper received-color"}>
+              <h3 className="title">دریافتی دوره</h3>
+              <p className="sum"> {rSum} تومان</p>
             </div>
           </Grid>
         </Grid>
