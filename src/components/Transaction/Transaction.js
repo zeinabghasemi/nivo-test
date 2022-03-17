@@ -49,7 +49,6 @@ const initialFilterState = {
   recievedState: false,
 };
 
-
 const useStyles = makeStyles((theme) => ({
   dialog: {
     borderRadius: "30px 30px 0px 0px",
@@ -105,59 +104,59 @@ export default function Transaction() {
       });
 
       monthData.map((m) => {
-        days.add(m["day"])
+        days.add(m["day"]);
         if (m["type"] == "paid") {
           paidSum = paidSum + m["price"];
         }
         if (m["type"] == "recieved") {
           recievedSum = recievedSum + m["price"];
         }
-
       });
-    } else if (filterState.paidState == true && filterState.recievedState == false) {
+    } else if (
+      filterState.paidState == true &&
+      filterState.recievedState == false
+    ) {
       data.map((tr) => {
         if (
           tr["year"] == dateState.yearHead &&
           tr["month"] == dateState.monthHead &&
           tr["type"] == "paid"
-
         ) {
           monthData.push(tr);
         }
       });
 
       monthData.map((m) => {
-        days.add(m["day"])
+        days.add(m["day"]);
         if (m["type"] == "paid") {
           paidSum = paidSum + m["price"];
         }
         if (m["type"] == "recieved") {
           recievedSum = recievedSum + m["price"];
         }
-
       });
-
-    } else if (filterState.paidState == false && filterState.recievedState == true) {
+    } else if (
+      filterState.paidState == false &&
+      filterState.recievedState == true
+    ) {
       data.map((tr) => {
         if (
           tr["year"] == dateState.yearHead &&
           tr["month"] == dateState.monthHead &&
           tr["type"] == "recieved"
-
         ) {
           monthData.push(tr);
         }
       });
 
       monthData.map((m) => {
-        days.add(m["day"])
+        days.add(m["day"]);
         if (m["type"] == "paid") {
           paidSum = paidSum + m["price"];
         }
         if (m["type"] == "recieved") {
           recievedSum = recievedSum + m["price"];
         }
-
       });
     }
 
@@ -169,7 +168,7 @@ export default function Transaction() {
     dayInfo.splice(0, dayInfo.length);
     monthData.forEach((m) => {
       if (m["day"] == item) {
-        dayInfo.push(m)
+        dayInfo.push(m);
       }
     });
     return dayInfo;
@@ -212,14 +211,19 @@ export default function Transaction() {
   function optionPressed(filter) {
     if (filterState.paidState == false && filterState.recievedState == false) {
       if (filter == "paid") {
-        filterState.paidState = true
+        filterState.paidState = true;
       } else {
-        filterState.recievedState = true
+        filterState.recievedState = true;
       }
-
-    } else if (filterState.paidState == false && filterState.recievedState == true) {
+    } else if (
+      filterState.paidState == false &&
+      filterState.recievedState == true
+    ) {
       filterState.recievedState = false;
-    } else if (filterState.paidState == true && filterState.recievedState == false) {
+    } else if (
+      filterState.paidState == true &&
+      filterState.recievedState == false
+    ) {
       filterState.paidState = false;
     }
     setFilterState({ ...filterState });
@@ -254,13 +258,37 @@ export default function Transaction() {
       <div className="report-block">
         <Grid container alignContent="space-around">
           <Grid item xs={6}>
-            <div onClick={() => { optionPressed("paid") }} className={"paper payment-color"}>
+            <div
+              onClick={() => {
+                optionPressed("paid");
+              }}
+              className={
+                (filterState.paidState == false &&
+                  filterState.recievedState == false) ||
+                (filterState.paidState == true &&
+                  filterState.recievedState == false)
+                  ? "paper payment-color"
+                  : "paper-disabled payment-color"
+              }
+            >
               <h3 className="title">پرداختی دوره</h3>
               <p className="sum">{pSum} تومان</p>
             </div>
           </Grid>
           <Grid item xs={6}>
-            <div onClick={() => { optionPressed("recieved") }} className={"paper received-color"}>
+            <div
+              onClick={() => {
+                optionPressed("recieved");
+              }}
+              className={
+                (filterState.paidState == false &&
+                  filterState.recievedState == false) ||
+                (filterState.recievedState == true &&
+                  filterState.paidState == false)
+                  ? "paper received-color"
+                  : "paper-disabled received-color"
+              }
+            >
               <h3 className="title">دریافتی دوره</h3>
               <p className="sum"> {rSum} تومان</p>
             </div>
@@ -316,13 +344,35 @@ export default function Transaction() {
             <div className="align">
               <b>تراکنش جدید</b>
             </div>
-            <div className="align clickable" onClick={() => { method = "paid"; handleClickOpen() }}>
+            <div
+              className="align clickable"
+              onClick={() => {
+                method = "paid";
+                handleClickOpen();
+              }}
+            >
               پرداخت
             </div>
             <Divider />
-            <div className="align clickable" onClick={() => { method = "recieved"; handleClickOpen() }}>دریافت</div>
+            <div
+              className="align clickable"
+              onClick={() => {
+                method = "recieved";
+                handleClickOpen();
+              }}
+            >
+              دریافت
+            </div>
             <Divider />
-            <div className="align clickable" onClick={() => { method = "change"; handleClickOpen() }}>جیب به جیب</div>
+            <div
+              className="align clickable"
+              onClick={() => {
+                method = "change";
+                handleClickOpen();
+              }}
+            >
+              جیب به جیب
+            </div>
             <Divider />
           </List>
         </Dialog>
@@ -338,8 +388,13 @@ export default function Transaction() {
         </Dialog>
       </div>
       <div className="transaction-block">
-        {Array.from(daysSet).map((item) => (<DailyTransactionsSection num={item} month={getFaMonth(mCurrent)} data={dayDataGenerate(item)} />))}
-
+        {Array.from(daysSet).map((item) => (
+          <DailyTransactionsSection
+            num={item}
+            month={getFaMonth(mCurrent)}
+            data={dayDataGenerate(item)}
+          />
+        ))}
       </div>
     </div>
   );

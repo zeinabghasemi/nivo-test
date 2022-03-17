@@ -19,6 +19,17 @@
   margin          : 10px 10px 0px 10px;
   cursor          : pointer;
 }
+
+.paper-disabled {
+  padding         : 5px 25px 5px 25px;
+  text-align      : start;
+  color           : white;
+  border-radius   : 16px;
+  margin          : 10px 10px 0px 10px;
+  cursor          : pointer;
+  opacity         : 0.5;
+  
+}
 .whole {
   padding         : 0px 5px 0px 0px;
   text-align      : start;
