@@ -21,7 +21,7 @@ function DailyTransactionsSection(props) {
     <div className="main-section">
       <div className="date-label">
         <span className="date"> {props.num +" "+ props.month}</span>
-        <span>{monthDataGenerate() < 0 ? Math.abs(monthDataGenerate()) + "-" : monthDataGenerate()}</span>
+        <span>{monthDataGenerate() < 0 ? Math.abs(monthDataGenerate()) + "-" : monthDataGenerate() + "+"}</span>
       </div>
         {
         props.data.map((item) =>
@@ -31,7 +31,7 @@ function DailyTransactionsSection(props) {
           <p className="name">{item["category"]}</p>
         </div>
         <div className="transaction-price">
-              <p>{item["type"] == "recieved" ? item["price"] : item["price"] + "-"}</p>
+              <p>{item["type"] == "recieved" ? item["price"] + "+": item["price"] + "-"}</p>
         </div>
       </div>
           )

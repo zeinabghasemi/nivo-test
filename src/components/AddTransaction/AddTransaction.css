@@ -1,5 +1,5 @@
 .dialog-list {
-  height          : 390px;
+  height          : 470px;
   width           : 600px;
 }
 
@@ -27,16 +27,22 @@
 }
 
 .calendar {
-  margin-top      : 5px !important;
+  margin-left      : 10px !important;
 }
 
 .date-section {
-  margin-top      : 15px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  margin-top      : 20px !important;
   cursor          : pointer;
 }
 
 .price-section{
   display         : flex;
+  margin-top : 5px !important;
+  margin-bottom : 5px !important;
 }
 
 .MuiTypography-body1 , .MuiInput-input{
@@ -44,7 +50,8 @@
 }
 
 .radio-group {
-  margin-top      : 10px !important;
+  margin-top      : 20px !important;
+  margin-bottom      : 20px !important;
   margin-right    : -25px !important;
 }
 
@@ -84,7 +91,7 @@
 
 @media screen and (max-width: 600px) {
   .dialog-list {
-    height        : 430px;
+    height        : 500px;
     width         : 300px;
   }
 }

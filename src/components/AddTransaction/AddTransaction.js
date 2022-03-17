@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
@@ -10,44 +10,48 @@ import Button from "@mui/material/Button";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 // import { DatePicker } from "jalali-react-datepicker";
+import "react-modern-calendar-datepicker/lib/DatePicker.css";
+import DatePicker from "react-modern-calendar-datepicker";
 import "./AddTransaction.css";
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
 import {
   addTransaction,
   updateTransaction,
   deleteTransaction,
   listData,
-} from '../../app/dataSlice';
-import { TransactionModel, getNextTransactionSequenceId } from '../../app/models';
+} from "../../app/dataSlice";
+import {
+  TransactionModel,
+  getNextTransactionSequenceId,
+} from "../../app/models";
 
-export default function AddTransaction() {
+export default function AddTransaction(props) {
   const dispatch = useDispatch();
-  const [state, setState] = React.useState({ price: 0, note: '' });
-
-  console.log(state)
-
+  const [state, setState] = React.useState({ price: 0, note: "" });
   const handlePrice = (event) => {
     setState({ ...state, price: Number(event.target.value) });
-  }
+  };
 
   const handleNote = (event) => {
     setState({ ...state, note: event.target.value });
-  }
-
+  };
+  const [selectedDay, setSelectedDay] = useState(null);
+  console.log(selectedDay)
   return (
     <List className="dialog-list">
       <div className="item-align">
         <b>تراکنش جدید</b>
       </div>
-      <div className="date-section" onClick={() => { }}>
+      <div className="date-section">
         <CalendarTodayIcon className="calendar" />
-        <TextField
-          disabled
-          className="textField-style"
-          id="standard-size-normal"
-          defaultValue="1370/02/02"
-          variant="standard"
+        <DatePicker
+          className="date-piker"
+          value={selectedDay}
+          onChange={setSelectedDay}
+          inputPlaceholder={props.date}
+          shouldHighlightWeekends
+          locale="fa"
         />
       </div>
       <Divider />
@@ -60,21 +64,37 @@ export default function AddTransaction() {
         <FormControlLabel
           className="pppp"
           value="paid"
-          control={<Radio color="success" />}
+          control={
+            <Radio
+              color="success"
+              checked={props.method == "paid" ? true : false}
+            />
+          }
           label="پرداخت"
         />
         <FormControlLabel
           value="recieved"
-          control={<Radio color="success" />}
+          control={
+            <Radio
+              color="success"
+              checked={props.method == "recieved" ? true : false}
+            />
+          }
           label="دریافت"
         />
         <FormControlLabel
           value="change"
-          control={<Radio color="success" />}
+          control={
+            <Radio
+              color="success"
+              checked={props.method == "change" ? true : false}
+            />
+          }
           label="جیب به جیب"
         />
       </RadioGroup>
       <Divider />
+
       <div className="price-section">
         <p>مبلغ:</p>
         <TextField
@@ -104,16 +124,21 @@ export default function AddTransaction() {
           startIcon={<CheckIcon className="icons-style" />}
           variant="contained"
           onClick={() => {
-            dispatch(addTransaction(new TransactionModel(
-              getNextTransactionSequenceId(),
-              "paid",
-              state.price,
-              state.note,
-              "سرگرمی",
-              1400,
-              12,
-              1,
-            ).toJson()));
+            var today = props.date.split("/");
+            dispatch(
+              addTransaction(
+                new TransactionModel(
+                  getNextTransactionSequenceId(),
+                  props.method,
+                  state.price,
+                  state.note,
+                  "سرگرمی",
+                  selectedDay == null ? today[2] : selectedDay.year,
+                  selectedDay == null ? today[1] : selectedDay.month,
+                  selectedDay == null ? today[0] : selectedDay.day,
+                ).toJson()
+              )
+            );
           }}
         >
           تایید
@@ -122,7 +147,7 @@ export default function AddTransaction() {
           className="cancel-icon-button"
           startIcon={<ClearIcon className="icons-style" />}
           variant="contained"
-          onClick={() => { }}
+          onClick={() => this.setState({ open: !this.state.open })}
         >
           لغو
         </Button>

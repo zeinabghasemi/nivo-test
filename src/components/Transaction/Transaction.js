@@ -24,6 +24,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+var method = "";
 const faMonths = [
   "فروردین",
   "اردیبهشت",
@@ -60,13 +61,12 @@ export default function Transaction() {
   const data = useSelector(listData);
   const monthData = new Array();
   const days = new Set();
-
   const dispatch = useDispatch();
   const classes = useStyles();
   const [openItems, setOpenItems] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [dateState, setDateState] = React.useState(initialDateState);
-
+  const date = moment(Date.now()).format("jYYYY/jMM/jDD");
   const handleClickOpen = () => {
     setOpen(true);
     setOpenItems(false);
@@ -104,18 +104,18 @@ export default function Transaction() {
       if (m["type"] == "recieved") {
         recievedSum = recievedSum + m["price"];
       }
-      
+
     });
-    return [monthData,monthData.length,days, paidSum, recievedSum];
+    return [monthData, monthData.length, days, paidSum, recievedSum];
   }
   const [mData, mDataLength, daysSet, pSum, rSum] = monthDataGenerate();
   function dayDataGenerate(item) {
     const dayInfo = new Array();
     dayInfo.splice(0, dayInfo.length);
     monthData.forEach((m) => {
-      if (m["day"]== item){
-      dayInfo.push(m)
-    }
+      if (m["day"] == item) {
+        dayInfo.push(m)
+      }
     });
     return dayInfo;
   }
@@ -247,13 +247,13 @@ export default function Transaction() {
             <div className="align">
               <b>تراکنش جدید</b>
             </div>
-            <div className="align clickable" onClick={handleClickOpen}>
+            <div className="align clickable" onClick={() => { method = "paid"; handleClickOpen() }}>
               پرداخت
             </div>
             <Divider />
-            <div className="align clickable">دریافت</div>
+            <div className="align clickable" onClick={() => { method = "recieved"; handleClickOpen() }}>دریافت</div>
             <Divider />
-            <div className="align clickable">جیب به جیب</div>
+            <div className="align clickable" onClick={() => { method = "change"; handleClickOpen() }}>جیب به جیب</div>
             <Divider />
           </List>
         </Dialog>
@@ -265,12 +265,12 @@ export default function Transaction() {
           onClose={handleClose}
           TransitionComponent={Transition}
         >
-          <AddTransaction />
+          <AddTransaction method={method} date={date} />
         </Dialog>
       </div>
       <div className="transaction-block">
         {Array.from(daysSet).map((item) => (<DailyTransactionsSection num={item} month={getFaMonth(mCurrent)} data={dayDataGenerate(item)} />))}
-        
+
       </div>
     </div>
   );
