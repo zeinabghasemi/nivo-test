@@ -1,51 +1,50 @@
 import React from "react";
 import "./Transaction.css";
 import moment from "moment-jalaali";
-import List from '@mui/material/List';
-import Slide from '@mui/material/Slide';
+import List from "@mui/material/List";
+import Slide from "@mui/material/Slide";
 import Grid from "@material-ui/core/Grid";
 import Button from "@mui/material/Button";
-import Divider from '@mui/material/Divider';
-import { makeStyles, Dialog } from '@material-ui/core'
+import Divider from "@mui/material/Divider";
+import { makeStyles, Dialog } from "@material-ui/core";
 import AddTransaction from "../AddTransaction/AddTransaction";
-import ArrowBackIosNewIcon from '@material-ui/icons/ArrowBackIos';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import ArrowBackIosNewIcon from "@material-ui/icons/ArrowBackIos";
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import DailyTransactionsSection from "../DailyTransactionsSection/DailyTransactions";
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
 import {
   addTransaction,
   updateTransaction,
   deleteTransaction,
   listData,
-} from '../../app/dataSlice';
+} from "../../app/dataSlice";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const faMonths = [
-  'فروردین',
-  'اردیبهشت',
-  'خرداد',
-  'تیر',
-  'مرداد',
-  'شهریور',
-  'مهر',
-  'آبان',
-  'آذر',
-  'دی',
-  'بهمن',
-  'اسفند',
+  "فروردین",
+  "اردیبهشت",
+  "خرداد",
+  "تیر",
+  "مرداد",
+  "شهریور",
+  "مهر",
+  "آبان",
+  "آذر",
+  "دی",
+  "بهمن",
+  "اسفند",
 ];
 
 const initialDateState = {
-  monthHead: Number(moment(Date.now()).format('jMM')),
-  yearHead: Number(moment(Date.now()).format('jYYYY')),
+  monthHead: Number(moment(Date.now()).format("jMM")),
+  yearHead: Number(moment(Date.now()).format("jYYYY")),
 };
 
 const useStyles = makeStyles((theme) => ({
-
   dialog: {
     borderRadius: "30px 30px 0px 0px",
     display: "flex",
@@ -54,19 +53,19 @@ const useStyles = makeStyles((theme) => ({
     position: "fixed",
     bottom: -30,
     padding: "1rem",
-  }
+  },
 }));
 
 export default function Transaction() {
   const data = useSelector(listData);
+  const monthData = new Array();
+  const days = new Set();
+
   const dispatch = useDispatch();
-  console.log('aaa', data);
   const classes = useStyles();
   const [openItems, setOpenItems] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [dateState, setDateState] = React.useState(initialDateState);
-
-  console.log(dateState)
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -83,6 +82,43 @@ export default function Transaction() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  function monthDataGenerate() {
+    var paidSum = 0;
+    var recievedSum = 0;
+    monthData.splice(0, monthData.length);
+    days.clear();
+    data.map((tr) => {
+      if (
+        tr["year"] == dateState.yearHead &&
+        tr["month"] == dateState.monthHead
+      ) {
+        monthData.push(tr);
+      }
+    });
+    monthData.map((m) => {
+      days.add(m["day"])
+      if (m["type"] == "paid") {
+        paidSum = paidSum + m["price"];
+      }
+      if (m["type"] == "recieved") {
+        recievedSum = recievedSum + m["price"];
+      }
+      
+    });
+    return [monthData,monthData.length,days, paidSum, recievedSum];
+  }
+  const [mData, mDataLength, daysSet, pSum, rSum] = monthDataGenerate();
+  function dayDataGenerate(item) {
+    const dayInfo = new Array();
+    dayInfo.splice(0, dayInfo.length);
+    monthData.forEach((m) => {
+      if (m["day"]== item){
+      dayInfo.push(m)
+    }
+    });
+    return dayInfo;
+  }
 
   function nextMonth() {
     if (dateState.monthHead < 12) {
@@ -119,24 +155,21 @@ export default function Transaction() {
   }
 
   const [mBefore, mCurrent, mNext] = get3Month();
-  console.log(getFaMonth(mBefore))
-  console.log(getFaMonth(mCurrent))
-  console.log(getFaMonth(mNext))
   return (
     <div className="main">
       <div className="month-parts">
         <Button
           className="arrow-icon-button"
-          startIcon={<ArrowForwardIosIcon id="next-month" className="icons-style" />}
+          startIcon={
+            <ArrowForwardIosIcon id="next-month" className="icons-style" />
+          }
           variant="contained"
           onClick={nextMonth}
         >
           {getFaMonth(mNext)}
         </Button>
-        <div
-          className="arrow-icon-button this-month"
-        >
-          {getFaMonth(mCurrent) + ' ' + dateState.yearHead}
+        <div className="arrow-icon-button this-month">
+          {getFaMonth(mCurrent) + " " + dateState.yearHead}
         </div>
         <Button
           className="arrow-icon-button"
@@ -152,14 +185,14 @@ export default function Transaction() {
           <Grid item xs={6}>
             <div className={"paper payment-color"}>
               <h3 className="title">پرداختی دوره</h3>
-              <p className="sum">36500000 تومان</p>
+              <p className="sum">{pSum} تومان</p>
             </div>
           </Grid>
           <Grid item xs={6}>
             <div onClick={() => alert("Hello from here")}>
               <div className={"paper received-color"}>
                 <h3 className="title">دریافتی دوره</h3>
-                <p className="sum"> 405000000 تومان</p>
+                <p className="sum"> {rSum} تومان</p>
               </div>
             </div>
           </Grid>
@@ -172,7 +205,9 @@ export default function Transaction() {
           </Grid>
           <Grid item xs={6}>
             <div className={"whole"}>
-              <p className="title">47545000+</p>
+              <p className="title">
+                {rSum - pSum < 0 ? pSum - rSum + "-" : rSum - pSum}
+              </p>
             </div>
           </Grid>
         </Grid>
@@ -184,7 +219,7 @@ export default function Transaction() {
           </Grid>
           <Grid item xs={6}>
             <div className={"whole"}>
-              <p className="title">4</p>
+              <p className="title">{mDataLength}</p>
             </div>
           </Grid>
         </Grid>
@@ -193,47 +228,50 @@ export default function Transaction() {
         <Button className="icon-button" variant="contained">
           دانلود خروجی اکسل
         </Button>
-        <Button className="icon-button" variant="contained" onClick={handleClickOpenItems} >
+        <Button
+          className="icon-button"
+          variant="contained"
+          onClick={handleClickOpenItems}
+        >
           تراکنش جدید
         </Button>
         <Dialog
           classes={{
-            paper: classes.dialog
+            paper: classes.dialog,
           }}
           open={openItems}
           onClose={HandleCloseItems}
           TransitionComponent={Transition}
         >
           <List className="dialog">
-            <div className="align"><b>تراکنش جدید</b>
+            <div className="align">
+              <b>تراکنش جدید</b>
             </div>
             <div className="align clickable" onClick={handleClickOpen}>
-              پرداخت</div>
+              پرداخت
+            </div>
             <Divider />
-            <div className="align clickable">
-              دریافت</div>
+            <div className="align clickable">دریافت</div>
             <Divider />
-            <div className="align clickable">
-              جیب به جیب</div>
+            <div className="align clickable">جیب به جیب</div>
             <Divider />
           </List>
         </Dialog>
         <Dialog
           classes={{
-            paper: classes.dialog
+            paper: classes.dialog,
           }}
           open={open}
           onClose={handleClose}
-
           TransitionComponent={Transition}
         >
           <AddTransaction />
         </Dialog>
       </div>
       <div className="transaction-block">
-        <DailyTransactionsSection />
+        {Array.from(daysSet).map((item) => (<DailyTransactionsSection num={item} month={getFaMonth(mCurrent)} data={dayDataGenerate(item)} />))}
+        
       </div>
     </div>
   );
 }
-
