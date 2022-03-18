@@ -4,6 +4,8 @@ import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import Radio from "@mui/material/Radio";
+import Slide from "@mui/material/Slide";
+import { makeStyles, Dialog } from "@material-ui/core";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Button from "@mui/material/Button";
@@ -12,6 +14,7 @@ import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import DatePicker from "react-modern-calendar-datepicker";
+import CategoryDialog from "../Category/Category";
 import "./AddTransaction.css";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -26,18 +29,48 @@ import {
   getNextTransactionSequenceId,
 } from "../../app/models";
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+const useStyles = makeStyles((theme) => ({
+  dialog: {
+    borderRadius: "30px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "fixed",
+    bottom: 0,
+    padding: "1rem",
+  },
+}));
+
 export default function AddTransaction(props) {
   const dispatch = useDispatch();
-  const [state, setState] = React.useState({ price: 0, note: "" });
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const [state, setState] = React.useState({
+    price: 0,
+    note: "",
+    category: props.category || "",
+  });
   const handlePrice = (event) => {
     setState({ ...state, price: Number(event.target.value) });
+  };
+  const handleCategory = (category) => {
+    setState({ ...state, category });
   };
   const handleNote = (event) => {
     setState({ ...state, note: event.target.value });
   };
   const { onClose, operation } = props;
   const [selectedDay, setSelectedDay] = useState(null);
-  console.log(props);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
     <List className="dialog-list">
       <div className="item-align">
@@ -97,7 +130,7 @@ export default function AddTransaction(props) {
           }
           label="دریافت"
         />
-        <FormControlLabel
+        {/* <FormControlLabel
           value="change"
           control={
             <Radio
@@ -106,7 +139,7 @@ export default function AddTransaction(props) {
             />
           }
           label="جیب به جیب"
-        />
+        /> */}
       </RadioGroup>
       <Divider />
 
@@ -120,6 +153,30 @@ export default function AddTransaction(props) {
           onChange={handlePrice}
         />
       </div>
+      <Divider />
+      <div
+        className="category-section"
+        onClick={() => {
+          handleClickOpen();
+        }}
+      >
+        <p>دسته بندی:</p>
+        <span className="category-text">{state.category}</span>
+      </div>
+      <Dialog
+        classes={{
+          paper: classes.dialog,
+        }}
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={Transition}
+      >
+        <CategoryDialog
+          method={props.method}
+          onClick={handleClose}
+          handleCategory={handleCategory}
+        />
+      </Dialog>
       <Divider />
       <div className="note-section">
         <p>یادداشت:</p>
@@ -148,7 +205,7 @@ export default function AddTransaction(props) {
                     props.method,
                     state.price,
                     state.note,
-                    "سرگرمی",
+                    state.category,
                     selectedDay == null ? today[0] : selectedDay.year,
                     selectedDay == null ? today[1] : selectedDay.month,
                     selectedDay == null ? today[2] : selectedDay.day
@@ -164,7 +221,7 @@ export default function AddTransaction(props) {
                     props.method,
                     state.price,
                     state.note,
-                    "سرگرمی",
+                    state.category,
                     selectedDay == null ? today[0] : selectedDay.year,
                     selectedDay == null ? today[1] : selectedDay.month,
                     selectedDay == null ? today[2] : selectedDay.day

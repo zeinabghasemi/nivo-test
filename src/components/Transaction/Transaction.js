@@ -365,7 +365,7 @@ export default function Transaction() {
               دریافت
             </div>
             <Divider />
-            <div
+            {/* <div
               className="align clickable"
               onClick={() => {
                 method = "change";
@@ -373,7 +373,7 @@ export default function Transaction() {
               }}
             >
               جیب به جیب
-            </div>
+            </div> */}
             <Divider />
           </List>
         </Dialog>

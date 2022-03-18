@@ -97,6 +97,7 @@ function DailyTransactionsSection(props) {
               price={item["price"]}
               note={item["note"]}
               id={item["id"]}
+              category={item["category"]}
               onClose={() => handleClose(item["id"])}
             />
           </Dialog>

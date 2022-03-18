@@ -1,23 +1,23 @@
 .dialog-list {
-  height          : 470px;
+  height          : 530px;
   width           : 600px;
 }
 
 .item-align {
   display         : flex;
-  justify-content: start;
-  align-items: center;
+  justify-content : start;
+  align-items     : center;
   text-align      : center !important;
   padding         : 0px;
   font-size       : 18px;
 }
 
 .delete {
-  color: red !important;
-  cursor: pointer;
+  color           : red !important;
+  cursor          : pointer;
 }
 .add-title {
-  margin-right: 240px;
+  margin-right    : 240px;
 }
 
 .textField-style {
@@ -37,32 +37,43 @@
   margin-top      : 5px !important;
 }
 
+.category-textField-style {
+  margin-right    : 8px !important;
+  margin-top      : 5px !important;
+}
+
 .calendar {
-  margin-left      : 10px !important;
+  margin-left     : 10px !important;
 }
 
 .date-section {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
+  display         : flex;
+  align-items     : center;
+  justify-content : center;
+  margin-bottom   : 20px;
   margin-top      : 20px !important;
   cursor          : pointer;
 }
 
 .price-section{
   display         : flex;
-  margin-top : 5px !important;
-  margin-bottom : 5px !important;
+  margin-top      : 5px !important;
+  margin-bottom   : 5px !important;
+}
+.category-section{
+  display         : flex;
+  margin-top      : 5px !important;
+  margin-bottom   : 5px !important;
+  align-items     : center;
 }
 
 .MuiTypography-body1 , .MuiInput-input{
- font-family: IRANSans !important;
+ font-family      : IRANSans !important;
 }
 
 .radio-group {
   margin-top      : 20px !important;
-  margin-bottom      : 20px !important;
+  margin-bottom   : 20px !important;
   margin-right    : -25px !important;
 }
 
@@ -100,12 +111,19 @@
   margin-left     : 15PX;
 }
 
+.category-text {
+  margin-right    : 5px;
+  border-bottom   : grey 1px solid;
+  min-width       : 32px;
+  min-height      : 16px;
+}
+
 @media screen and (max-width: 600px) {
   .dialog-list {
-    height        : 500px;
+    height        : 550px;
     width         : 300px;
   }
   .add-title {
-    margin-right: 90px;
+    margin-right  : 90px;
   }
 }

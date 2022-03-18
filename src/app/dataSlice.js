@@ -1,6 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
-import { TransactionModel, getNextTransactionSequenceId } from './models';
+import { TransactionModel, getNextTransactionSequenceId } from "./models";
 
 const data = TransactionModel.fromJsonArray([
   {
@@ -62,15 +62,19 @@ const data = TransactionModel.fromJsonArray([
     year: 1401,
     month: 1,
     day: 2,
-  }
+  },
 ]);
 
 const initialState = {
   data: TransactionModel.toJsonArray(data),
+  category: {
+    paid: ["خرید", "سرگرمی", "قسط", "پوشاک", "خانواده", "مسافرت"],
+    recieved: ["حقوق", "چک", "پاداش", "فروش", "قرض گرفتن", "پس گرفتن"],
+  },
 };
 
 const dataSlice = createSlice({
-  name: 'nivo-test',
+  name: "nivo-test",
   initialState,
   reducers: {
     addTransaction: (state, action) => {
@@ -92,11 +96,13 @@ const dataSlice = createSlice({
         state.data.splice(idx, 1);
       }
     },
-  }
+  },
 });
 
-export const { addTransaction, updateTransaction, deleteTransaction } = dataSlice.actions;
+export const { addTransaction, updateTransaction, deleteTransaction } =
+  dataSlice.actions;
 
 export const listData = (state) => state.myReducer.data;
+export const listCategories = (state) => state.myReducer.category;
 
 export default dataSlice.reducer;
