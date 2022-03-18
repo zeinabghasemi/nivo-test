@@ -24,7 +24,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-var method = "";
+let method = "";
 const faMonths = [
   "فروردین",
   "اردیبهشت",
@@ -61,153 +61,160 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function getMonthInfo(data, filterState, { yearHead, monthHead }) {
+  const days = new Set();
+  const monthTransactions = new Array();
+  let paidSum = 0;
+  let recievedSum = 0;
+
+  if (filterState.paidState == false && filterState.recievedState == false) {
+    data.forEach((tr) => {
+      if (tr["year"] == yearHead && tr["month"] == monthHead) {
+        monthTransactions.push(tr);
+      }
+    });
+
+    monthTransactions.forEach((m) => {
+      days.add(m["day"]);
+      if (m["type"] == "paid") {
+        paidSum = paidSum + m["price"];
+      }
+      if (m["type"] == "recieved") {
+        recievedSum = recievedSum + m["price"];
+      }
+    });
+  } else if (
+    filterState.paidState == true &&
+    filterState.recievedState == false
+  ) {
+    data.forEach((tr) => {
+      if (
+        tr["year"] == yearHead &&
+        tr["month"] == monthHead &&
+        tr["type"] == "paid"
+      ) {
+        monthTransactions.push(tr);
+      }
+    });
+
+    monthTransactions.forEach((m) => {
+      days.add(m["day"]);
+      if (m["type"] == "paid") {
+        paidSum = paidSum + m["price"];
+      }
+      if (m["type"] == "recieved") {
+        recievedSum = recievedSum + m["price"];
+      }
+    });
+  } else if (
+    filterState.paidState == false &&
+    filterState.recievedState == true
+  ) {
+    data.forEach((tr) => {
+      if (
+        tr["year"] == yearHead &&
+        tr["month"] == monthHead &&
+        tr["type"] == "recieved"
+      ) {
+        monthTransactions.push(tr);
+      }
+    });
+
+    monthTransactions.forEach((m) => {
+      days.add(m["day"]);
+      if (m["type"] == "paid") {
+        paidSum = paidSum + m["price"];
+      }
+      if (m["type"] == "recieved") {
+        recievedSum = recievedSum + m["price"];
+      }
+    });
+  }
+
+  return [monthTransactions, days, paidSum, recievedSum];
+}
+
+function getDays(monthTransactions, day) {
+  const dayInfo = new Array();
+  dayInfo.splice(0, dayInfo.length);
+  monthTransactions.forEach((m) => {
+    if (m["day"] == day) {
+      dayInfo.push(m);
+    }
+  });
+
+  return dayInfo;
+}
+
+function nextMonth(dateState) {
+  if (dateState.monthHead < 12) {
+    dateState.monthHead = dateState.monthHead + 1;
+  } else {
+    dateState.yearHead = dateState.yearHead + 1;
+    dateState.monthHead = 1;
+  }
+}
+
+function prevMonth(dateState) {
+  if (dateState.monthHead > 1) {
+    dateState.monthHead = dateState.monthHead - 1;
+  } else {
+    dateState.yearHead = dateState.yearHead - 1;
+    dateState.monthHead = 12;
+  }
+}
+
+function get3Month(dateState) {
+  return [
+    dateState.monthHead == 1 ? 12 : dateState.monthHead - 1,
+    dateState.monthHead,
+    dateState.monthHead == 12 ? 1 : dateState.monthHead + 1,
+  ];
+}
+
+function getFaMonth(m) {
+  return faMonths[m - 1];
+}
+
+function currentDate() {
+  return moment(Date.now()).format("jYYYY/jMM/jDD");
+}
+
 export default function Transaction() {
   const data = useSelector(listData);
   console.log(data);
-  const monthData = new Array();
-  const days = new Set();
   const dispatch = useDispatch();
   const classes = useStyles();
-  const [openItems, setOpenItems] = React.useState(false);
-  const [open, setOpen] = React.useState(false);
+  const [isNewTransactionDialogOpen, newTransactionDialogSetState] =
+    React.useState(false);
+  const [isTransactionDialogOpen, transactionDialogSetState] =
+    React.useState(false);
   const [dateState, setDateState] = React.useState(initialDateState);
   const [filterState, setFilterState] = React.useState(initialFilterState);
-  const date = moment(Date.now()).format("jYYYY/jMM/jDD");
-  const handleClickOpen = () => {
-    setOpen(true);
-    setOpenItems(false);
-  };
-  const handleClickOpenItems = () => {
-    setOpenItems(true);
-  };
 
-  const HandleCloseItems = () => {
-    setOpenItems(false);
+  const showAddTransactionDialog = () => {
+    newTransactionDialogSetState(false);
+    transactionDialogSetState(true);
+  };
+  const showNewTransactionDialog = () => {
+    newTransactionDialogSetState(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const closeNewTransactionDialog = () => {
+    newTransactionDialogSetState(false);
   };
 
-  function monthDataGenerate() {
-    var paidSum = 0;
-    var recievedSum = 0;
-    monthData.splice(0, monthData.length);
-    days.clear();
-    if (filterState.paidState == false && filterState.recievedState == false) {
-      data.forEach((tr) => {
-        if (
-          tr["year"] == dateState.yearHead &&
-          tr["month"] == dateState.monthHead
-        ) {
-          monthData.push(tr);
-        }
-      });
+  const closeAddTransactionDialog = () => {
+    transactionDialogSetState(false);
+  };
 
-      monthData.forEach((m) => {
-        days.add(m["day"]);
-        if (m["type"] == "paid") {
-          paidSum = paidSum + m["price"];
-        }
-        if (m["type"] == "recieved") {
-          recievedSum = recievedSum + m["price"];
-        }
-      });
-    } else if (
-      filterState.paidState == true &&
-      filterState.recievedState == false
-    ) {
-      data.forEach((tr) => {
-        if (
-          tr["year"] == dateState.yearHead &&
-          tr["month"] == dateState.monthHead &&
-          tr["type"] == "paid"
-        ) {
-          monthData.push(tr);
-        }
-      });
+  const [monthTransactions, daysSet, paidSum, recievedSum] = getMonthInfo(
+    data,
+    filterState,
+    dateState
+  );
 
-      monthData.forEach((m) => {
-        days.add(m["day"]);
-        if (m["type"] == "paid") {
-          paidSum = paidSum + m["price"];
-        }
-        if (m["type"] == "recieved") {
-          recievedSum = recievedSum + m["price"];
-        }
-      });
-    } else if (
-      filterState.paidState == false &&
-      filterState.recievedState == true
-    ) {
-      data.forEach((tr) => {
-        if (
-          tr["year"] == dateState.yearHead &&
-          tr["month"] == dateState.monthHead &&
-          tr["type"] == "recieved"
-        ) {
-          monthData.push(tr);
-        }
-      });
-
-      monthData.forEach((m) => {
-        days.add(m["day"]);
-        if (m["type"] == "paid") {
-          paidSum = paidSum + m["price"];
-        }
-        if (m["type"] == "recieved") {
-          recievedSum = recievedSum + m["price"];
-        }
-      });
-    }
-
-    return [monthData, monthData.length, days, paidSum, recievedSum];
-  }
-  const [mData, mDataLength, daysSet, pSum, rSum] = monthDataGenerate();
-  function dayDataGenerate(item) {
-    const dayInfo = new Array();
-    dayInfo.splice(0, dayInfo.length);
-    monthData.forEach((m) => {
-      if (m["day"] == item) {
-        dayInfo.push(m);
-      }
-    });
-    return dayInfo;
-  }
-
-  function nextMonth() {
-    if (dateState.monthHead < 12) {
-      dateState.monthHead = dateState.monthHead + 1;
-    } else {
-      dateState.yearHead = dateState.yearHead + 1;
-      dateState.monthHead = 1;
-    }
-
-    setDateState({ ...dateState });
-  }
-
-  function prevMonth() {
-    if (dateState.monthHead > 1) {
-      dateState.monthHead = dateState.monthHead - 1;
-    } else {
-      dateState.yearHead = dateState.yearHead - 1;
-      dateState.monthHead = 12;
-    }
-
-    setDateState({ ...dateState });
-  }
-
-  function get3Month() {
-    return [
-      dateState.monthHead == 1 ? 12 : dateState.monthHead - 1,
-      dateState.monthHead,
-      dateState.monthHead == 12 ? 1 : dateState.monthHead + 1,
-    ];
-  }
-
-  function getFaMonth(m) {
-    return faMonths[m - 1];
-  }
+  console.log(daysSet);
 
   function optionPressed(filter) {
     if (filterState.paidState == false && filterState.recievedState == false) {
@@ -230,7 +237,7 @@ export default function Transaction() {
     setFilterState({ ...filterState });
   }
 
-  const [mBefore, mCurrent, mNext] = get3Month();
+  const [mBefore, mCurrent, mNext] = get3Month(dateState);
   return (
     <div className="main">
       <div className="month-parts">
@@ -240,7 +247,10 @@ export default function Transaction() {
             <ArrowForwardIosIcon id="next-month" className="icons-style" />
           }
           variant="contained"
-          onClick={nextMonth}
+          onClick={() => {
+            nextMonth(dateState);
+            setDateState({ ...dateState });
+          }}
         >
           {getFaMonth(mNext)}
         </Button>
@@ -251,7 +261,10 @@ export default function Transaction() {
           className="arrow-icon-button"
           variant="contained"
           endIcon={<ArrowBackIosNewIcon className="icons-style" />}
-          onClick={prevMonth}
+          onClick={() => {
+            prevMonth(dateState);
+            setDateState({ ...dateState });
+          }}
         >
           {getFaMonth(mBefore)}
         </Button>
@@ -273,7 +286,7 @@ export default function Transaction() {
               }
             >
               <h3 className="title">پرداختی دوره</h3>
-              <p className="sum">{pSum} تومان</p>
+              <p className="sum">{paidSum} تومان</p>
             </div>
           </Grid>
           <Grid item xs={6}>
@@ -291,7 +304,7 @@ export default function Transaction() {
               }
             >
               <h3 className="title">دریافتی دوره</h3>
-              <p className="sum"> {rSum} تومان</p>
+              <p className="sum"> {recievedSum} تومان</p>
             </div>
           </Grid>
         </Grid>
@@ -304,7 +317,9 @@ export default function Transaction() {
           <Grid item xs={6}>
             <div className={"whole"}>
               <p className="title">
-                {rSum - pSum < 0 ? pSum - rSum + "-" : rSum - pSum}
+                {recievedSum - paidSum < 0
+                  ? paidSum - recievedSum + "-"
+                  : recievedSum - paidSum}
               </p>
             </div>
           </Grid>
@@ -317,7 +332,7 @@ export default function Transaction() {
           </Grid>
           <Grid item xs={6}>
             <div className={"whole"}>
-              <p className="title">{mDataLength}</p>
+              <p className="title">{monthTransactions.length}</p>
             </div>
           </Grid>
         </Grid>
@@ -329,7 +344,7 @@ export default function Transaction() {
         <Button
           className="icon-button"
           variant="contained"
-          onClick={handleClickOpenItems}
+          onClick={showNewTransactionDialog}
         >
           تراکنش جدید
         </Button>
@@ -337,8 +352,8 @@ export default function Transaction() {
           classes={{
             paper: classes.dialog,
           }}
-          open={openItems}
-          onClose={HandleCloseItems}
+          open={isNewTransactionDialogOpen}
+          onClose={closeNewTransactionDialog}
           TransitionComponent={Transition}
         >
           <List className="dialog">
@@ -349,7 +364,7 @@ export default function Transaction() {
               className="align clickable"
               onClick={() => {
                 method = "paid";
-                handleClickOpen();
+                showAddTransactionDialog();
               }}
             >
               پرداخت
@@ -359,7 +374,7 @@ export default function Transaction() {
               className="align clickable"
               onClick={() => {
                 method = "recieved";
-                handleClickOpen();
+                showAddTransactionDialog();
               }}
             >
               دریافت
@@ -381,25 +396,25 @@ export default function Transaction() {
           classes={{
             paper: classes.dialog,
           }}
-          open={open}
-          onClose={handleClose}
+          open={isTransactionDialogOpen}
+          onClose={closeAddTransactionDialog}
           TransitionComponent={Transition}
         >
           <AddTransaction
             operation={"add"}
             method={method}
-            date={date}
-            onClose={handleClose}
+            date={currentDate()}
+            onClose={closeAddTransactionDialog}
           />
         </Dialog>
       </div>
       <div className="transaction-block">
-        {Array.from(daysSet).map((item, i) => (
+        {Array.from(daysSet).map((day, i) => (
           <DailyTransactionsSection
             key={i}
-            num={item}
+            num={day}
             month={getFaMonth(mCurrent)}
-            data={dayDataGenerate(item)}
+            data={getDays(monthTransactions, day)}
           />
         ))}
       </div>

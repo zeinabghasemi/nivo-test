@@ -50,8 +50,8 @@ export default function AddTransaction(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [state, setState] = React.useState({
-    price: 0,
-    note: "",
+    price: props.price || 0,
+    note: props.note || "",
     category: props.category || "",
   });
   const handlePrice = (event) => {
@@ -71,6 +71,21 @@ export default function AddTransaction(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  function makeTransaction(operation) {
+    const today = props.date.split("/");
+    return new TransactionModel(
+      operation == "add" ? getNextTransactionSequenceId() : props.id,
+      props.method,
+      state.price,
+      state.note,
+      state.category,
+      Number(selectedDay == null ? today[0] : selectedDay.year),
+      Number(selectedDay == null ? today[1] : selectedDay.month),
+      Number(selectedDay == null ? today[2] : selectedDay.day)
+    );
+  }
+
   return (
     <List className="dialog-list">
       <div className="item-align">
@@ -196,38 +211,11 @@ export default function AddTransaction(props) {
           startIcon={<CheckIcon className="icons-style" />}
           variant="contained"
           onClick={() => {
-            var today = props.date.split("/");
             if (operation == "add") {
-              dispatch(
-                addTransaction(
-                  new TransactionModel(
-                    getNextTransactionSequenceId(),
-                    props.method,
-                    state.price,
-                    state.note,
-                    state.category,
-                    selectedDay == null ? today[0] : selectedDay.year,
-                    selectedDay == null ? today[1] : selectedDay.month,
-                    selectedDay == null ? today[2] : selectedDay.day
-                  ).toJson()
-                )
-              );
+              dispatch(addTransaction(makeTransaction(operation).toJson()));
             }
             if (operation == "edit") {
-              dispatch(
-                updateTransaction(
-                  new TransactionModel(
-                    props.id,
-                    props.method,
-                    state.price,
-                    state.note,
-                    state.category,
-                    selectedDay == null ? today[0] : selectedDay.year,
-                    selectedDay == null ? today[1] : selectedDay.month,
-                    selectedDay == null ? today[2] : selectedDay.day
-                  ).toJson()
-                )
-              );
+              dispatch(updateTransaction(makeTransaction(operation).toJson()));
             }
 
             onClose();

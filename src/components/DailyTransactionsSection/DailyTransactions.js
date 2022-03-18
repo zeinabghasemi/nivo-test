@@ -41,16 +41,29 @@ function DailyTransactionsSection(props) {
   props.data.map((d) => {
     dialogStateTable[d["id"]] = false;
   });
-  const [open, setOpen] = React.useState(dialogStateTable);
+  const [isAddTransactionDialogOpenTable, addTransactionDialogSetState] =
+    React.useState(dialogStateTable);
 
-  const handleClose = (id) => {
-    setOpen({ [id]: false });
-  };
-  const handleClickOpen = (id) => {
-    setOpen({ [id]: true });
-  };
+  if (
+    !Object.keys(dialogStateTable).equals(
+      Object.keys(isAddTransactionDialogOpenTable)
+    )
+  ) {
+    addTransactionDialogSetState(dialogStateTable);
+  }
 
-  console.log(props.data);
+  const closeAddTransactionDialog = (id) => {
+    addTransactionDialogSetState({
+      ...isAddTransactionDialogOpenTable,
+      [id]: false,
+    });
+  };
+  const showAddTransactionDialog = (id) => {
+    addTransactionDialogSetState({
+      ...isAddTransactionDialogOpenTable,
+      [id]: true,
+    });
+  };
 
   return (
     <div className="main-section">
@@ -66,7 +79,7 @@ function DailyTransactionsSection(props) {
         <div key={i}>
           <div
             className="transaction-section"
-            onClick={() => handleClickOpen(item["id"])}
+            onClick={() => showAddTransactionDialog(item["id"])}
           >
             <div className="tarnsaction-title">
               <Avatar alt="transaction" className="avatar">
@@ -86,8 +99,8 @@ function DailyTransactionsSection(props) {
             classes={{
               paper: classes.dialog,
             }}
-            open={open[item["id"]]}
-            onClose={() => handleClose(item["id"])}
+            open={isAddTransactionDialogOpenTable[item["id"]]}
+            onClose={() => closeAddTransactionDialog(item["id"])}
             TransitionComponent={Transition}
           >
             <AddTransaction
@@ -98,7 +111,7 @@ function DailyTransactionsSection(props) {
               note={item["note"]}
               id={item["id"]}
               category={item["category"]}
-              onClose={() => handleClose(item["id"])}
+              onClose={() => closeAddTransactionDialog(item["id"])}
             />
           </Dialog>
         </div>
