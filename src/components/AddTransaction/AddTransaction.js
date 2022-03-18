@@ -48,12 +48,15 @@ const useStyles = makeStyles((theme) => ({
 export default function AddTransaction(props) {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  const [isCategoryDialogOpen, categoryDialogSetState] = React.useState(false);
   const [state, setState] = React.useState({
     price: props.price || 0,
     note: props.note || "",
     category: props.category || "",
   });
+  const { onClose, operation } = props;
+  const [selectedDay, setSelectedDay] = useState(null);
+
   const handlePrice = (event) => {
     setState({ ...state, price: Number(event.target.value) });
   };
@@ -63,13 +66,11 @@ export default function AddTransaction(props) {
   const handleNote = (event) => {
     setState({ ...state, note: event.target.value });
   };
-  const { onClose, operation } = props;
-  const [selectedDay, setSelectedDay] = useState(null);
-  const handleClickOpen = () => {
-    setOpen(true);
+  const showCategoryDialog = () => {
+    categoryDialogSetState(true);
   };
-  const handleClose = () => {
-    setOpen(false);
+  const closeCategoryDialog = () => {
+    categoryDialogSetState(false);
   };
 
   function makeTransaction(operation) {
@@ -172,7 +173,7 @@ export default function AddTransaction(props) {
       <div
         className="category-section"
         onClick={() => {
-          handleClickOpen();
+          showCategoryDialog();
         }}
       >
         <p>دسته بندی:</p>
@@ -182,13 +183,13 @@ export default function AddTransaction(props) {
         classes={{
           paper: classes.dialog,
         }}
-        open={open}
-        onClose={handleClose}
+        open={isCategoryDialogOpen}
+        onClose={closeCategoryDialog}
         TransitionComponent={Transition}
       >
         <CategoryDialog
           method={props.method}
-          onClick={handleClose}
+          onClick={closeCategoryDialog}
           handleCategory={handleCategory}
         />
       </Dialog>
