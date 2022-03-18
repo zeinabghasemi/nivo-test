@@ -63,6 +63,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Transaction() {
   const data = useSelector(listData);
+  console.log(data);
   const monthData = new Array();
   const days = new Set();
   const dispatch = useDispatch();
@@ -384,7 +385,7 @@ export default function Transaction() {
           onClose={handleClose}
           TransitionComponent={Transition}
         >
-          <AddTransaction method={method} date={date} />
+          <AddTransaction fu={"add"} method={method} date={date} price={null} note={null} id={null} />
         </Dialog>
       </div>
       <div className="transaction-block">

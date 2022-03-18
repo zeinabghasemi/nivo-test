@@ -4,9 +4,20 @@
 }
 
 .item-align {
+  display         : flex;
+  justify-content: start;
+  align-items: center;
   text-align      : center !important;
   padding         : 0px;
   font-size       : 18px;
+}
+
+.delete {
+  color: red !important;
+  cursor: pointer;
+}
+.add-title {
+  margin-right: 240px;
 }
 
 .textField-style {
@@ -93,5 +104,8 @@
   .dialog-list {
     height        : 500px;
     width         : 300px;
+  }
+  .add-title {
+    margin-right: 90px;
   }
 }

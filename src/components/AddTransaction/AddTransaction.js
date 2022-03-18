@@ -7,9 +7,9 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Button from "@mui/material/Button";
+import DeleteIcon from '@material-ui/icons/Delete';
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
-// import { DatePicker } from "jalali-react-datepicker";
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import DatePicker from "react-modern-calendar-datepicker";
 import "./AddTransaction.css";
@@ -37,11 +37,19 @@ export default function AddTransaction(props) {
     setState({ ...state, note: event.target.value });
   };
   const [selectedDay, setSelectedDay] = useState(null);
-  console.log(selectedDay)
   return (
     <List className="dialog-list">
       <div className="item-align">
-        <b>تراکنش جدید</b>
+        {props.fu == "edit" ? <DeleteIcon className="delete" onClick={() => {
+          dispatch(
+            deleteTransaction(
+              new TransactionModel(
+                props.id,
+              ).toJson()
+            )
+          );
+        }} /> : <></>}
+        <b className="add-title">{props.fu == "add" ? "تراکنش جدید" : "ویرایش تراکنش "}</b>
       </div>
       <div className="date-section">
         <CalendarTodayIcon className="calendar" />
@@ -99,7 +107,7 @@ export default function AddTransaction(props) {
         <p>مبلغ:</p>
         <TextField
           id="standard-size-normal"
-          defaultValue=""
+          defaultValue={props.fu == "add" ? "" : props.price}
           variant="standard"
           className="price-textField-style"
           onChange={handlePrice}
@@ -113,7 +121,7 @@ export default function AddTransaction(props) {
           multiline
           rows={2}
           variant="standard"
-          defaultValue=""
+          defaultValue={props.fu == "add" ? "" : props.note}
           className="note-textField-style"
           onChange={handleNote}
         />
@@ -125,20 +133,38 @@ export default function AddTransaction(props) {
           variant="contained"
           onClick={() => {
             var today = props.date.split("/");
-            dispatch(
-              addTransaction(
-                new TransactionModel(
-                  getNextTransactionSequenceId(),
-                  props.method,
-                  state.price,
-                  state.note,
-                  "سرگرمی",
-                  selectedDay == null ? today[2] : selectedDay.year,
-                  selectedDay == null ? today[1] : selectedDay.month,
-                  selectedDay == null ? today[0] : selectedDay.day,
-                ).toJson()
-              )
-            );
+            if (props.fu == "add") {
+              dispatch(
+                addTransaction(
+                  new TransactionModel(
+                    getNextTransactionSequenceId(),
+                    props.method,
+                    state.price,
+                    state.note,
+                    "سرگرمی",
+                    selectedDay == null ? today[2] : selectedDay.year,
+                    selectedDay == null ? today[1] : selectedDay.month,
+                    selectedDay == null ? today[0] : selectedDay.day,
+                  ).toJson()
+                )
+              );
+            }
+            if (props.fu == "edit") {
+              dispatch(
+                updateTransaction(
+                  new TransactionModel(
+                    props.id,
+                    props.method,
+                    state.price,
+                    state.note,
+                    "سرگرمی",
+                    selectedDay == null ? today[2] : selectedDay.year,
+                    selectedDay == null ? today[1] : selectedDay.month,
+                    selectedDay == null ? today[0] : selectedDay.day,
+                  ).toJson()
+                )
+              );
+            }
           }}
         >
           تایید
