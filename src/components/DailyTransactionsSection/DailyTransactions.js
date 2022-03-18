@@ -23,11 +23,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function DailyTransactionsSection(props) {
-  const [open, setOpen] = React.useState(false);
   const classes = useStyles();
   function monthDataGenerate() {
     var sum = 0;
-    props.data.map((m) => {
+    props.data.forEach((m) => {
       if (m["type"] == "paid") {
         sum = sum - m["price"];
       }
@@ -38,12 +37,20 @@ function DailyTransactionsSection(props) {
     return sum;
   }
 
-  const handleClose = () => {
-    setOpen(false);
+  const dialogStateTable = {};
+  props.data.map((d) => {
+    dialogStateTable[d["id"]] = false;
+  });
+  const [open, setOpen] = React.useState(dialogStateTable);
+
+  const handleClose = (id) => {
+    setOpen({ [id]: false });
   };
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleClickOpen = (id) => {
+    setOpen({ [id]: true });
   };
+
+  console.log(props.data);
 
   return (
     <div className="main-section">
@@ -55,9 +62,12 @@ function DailyTransactionsSection(props) {
             : monthDataGenerate() + "+"}
         </span>
       </div>
-      {props.data.map((item) => (
-        <>
-          <div className="transaction-section" onClick={() => {handleClickOpen() }} >
+      {props.data.map((item, i) => (
+        <div key={i}>
+          <div
+            className="transaction-section"
+            onClick={() => handleClickOpen(item["id"])}
+          >
             <div className="tarnsaction-title">
               <Avatar alt="transaction" className="avatar">
                 <CreditCardIcon />
@@ -76,13 +86,21 @@ function DailyTransactionsSection(props) {
             classes={{
               paper: classes.dialog,
             }}
-            open={open}
-            onClose={handleClose}
+            open={open[item["id"]]}
+            onClose={() => handleClose(item["id"])}
             TransitionComponent={Transition}
           >
-            <AddTransaction fu={"edit"} method={item["type"]} date={item["year"] + "/" + item["month"] + "/" + item["day"]} price={item["price"]} note={item["note"]} id={item["id"]} />
+            <AddTransaction
+              operation={"edit"}
+              method={item["type"]}
+              date={item["year"] + "/" + item["month"] + "/" + item["day"]}
+              price={item["price"]}
+              note={item["note"]}
+              id={item["id"]}
+              onClose={() => handleClose(item["id"])}
+            />
           </Dialog>
-        </>
+        </div>
       ))}
     </div>
   );

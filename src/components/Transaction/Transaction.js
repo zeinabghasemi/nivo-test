@@ -95,7 +95,7 @@ export default function Transaction() {
     monthData.splice(0, monthData.length);
     days.clear();
     if (filterState.paidState == false && filterState.recievedState == false) {
-      data.map((tr) => {
+      data.forEach((tr) => {
         if (
           tr["year"] == dateState.yearHead &&
           tr["month"] == dateState.monthHead
@@ -104,7 +104,7 @@ export default function Transaction() {
         }
       });
 
-      monthData.map((m) => {
+      monthData.forEach((m) => {
         days.add(m["day"]);
         if (m["type"] == "paid") {
           paidSum = paidSum + m["price"];
@@ -117,7 +117,7 @@ export default function Transaction() {
       filterState.paidState == true &&
       filterState.recievedState == false
     ) {
-      data.map((tr) => {
+      data.forEach((tr) => {
         if (
           tr["year"] == dateState.yearHead &&
           tr["month"] == dateState.monthHead &&
@@ -127,7 +127,7 @@ export default function Transaction() {
         }
       });
 
-      monthData.map((m) => {
+      monthData.forEach((m) => {
         days.add(m["day"]);
         if (m["type"] == "paid") {
           paidSum = paidSum + m["price"];
@@ -140,7 +140,7 @@ export default function Transaction() {
       filterState.paidState == false &&
       filterState.recievedState == true
     ) {
-      data.map((tr) => {
+      data.forEach((tr) => {
         if (
           tr["year"] == dateState.yearHead &&
           tr["month"] == dateState.monthHead &&
@@ -150,7 +150,7 @@ export default function Transaction() {
         }
       });
 
-      monthData.map((m) => {
+      monthData.forEach((m) => {
         days.add(m["day"]);
         if (m["type"] == "paid") {
           paidSum = paidSum + m["price"];
@@ -385,12 +385,18 @@ export default function Transaction() {
           onClose={handleClose}
           TransitionComponent={Transition}
         >
-          <AddTransaction fu={"add"} method={method} date={date} price={null} note={null} id={null} />
+          <AddTransaction
+            operation={"add"}
+            method={method}
+            date={date}
+            onClose={handleClose}
+          />
         </Dialog>
       </div>
       <div className="transaction-block">
-        {Array.from(daysSet).map((item) => (
+        {Array.from(daysSet).map((item, i) => (
           <DailyTransactionsSection
+            key={i}
             num={item}
             month={getFaMonth(mCurrent)}
             data={dayDataGenerate(item)}
