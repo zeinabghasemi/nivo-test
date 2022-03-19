@@ -9,10 +9,9 @@ import PersonIcon from "@material-ui/icons/Person";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import "./Appbar.css";
 
-
-export default function Appbar() {
+function Appbar() {
   return (
-      <AppBar className="appbarStyle" position="fixed">
+    <AppBar className="appbarStyle" position="fixed">
       <Toolbar>
         <div className="sectionDesktop">
           <IconButton
@@ -24,13 +23,20 @@ export default function Appbar() {
             <MenuIcon fontSize="medium" />
           </IconButton>
         </div>
-        <Avatar alt="logo" src="../public/logo192.png" className="menuButton main-avatar"><MonetizationOnIcon /></Avatar>
-        <div className="menuButton"><h5>
-          دفتر خرج شخصی من
-        </h5></div>
+        <Avatar
+          alt="logo"
+          src="../public/logo192.png"
+          className="menuButton main-avatar"
+        >
+          <MonetizationOnIcon />
+        </Avatar>
+        <div className="menuButton">
+          <h5>دفتر خرج شخصی من</h5>
+        </div>
         <div className="grow" />
         <div className="sectionAll">
-          <IconButton aria-label="show 17 new notifications"
+          <IconButton
+            aria-label="show 17 new notifications"
             className="menuButton"
             color="inherit"
           >
@@ -50,3 +56,4 @@ export default function Appbar() {
     </AppBar>
   );
 }
+export default Appbar;

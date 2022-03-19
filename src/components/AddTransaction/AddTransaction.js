@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AddTransaction(props) {
+function AddTransaction(props) {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [isCategoryDialogOpen, categoryDialogSetState] = React.useState(false);
@@ -236,3 +236,4 @@ export default function AddTransaction(props) {
     </List>
   );
 }
+export default  AddTransaction;

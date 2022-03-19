@@ -12,13 +12,8 @@ import ArrowBackIosNewIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import DailyTransactionsSection from "../DailyTransactionsSection/DailyTransactions";
 
-import { useSelector, useDispatch } from "react-redux";
-import {
-  addTransaction,
-  updateTransaction,
-  deleteTransaction,
-  listData,
-} from "../../app/dataSlice";
+import { useSelector } from "react-redux";
+import { listData } from "../../app/dataSlice";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -63,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 
 function getMonthInfo(data, filterState, { yearHead, monthHead }) {
   const days = new Set();
-  const monthTransactions = new Array();
+  const monthTransactions = [];
   let paidSum = 0;
   let recievedSum = 0;
 
@@ -130,12 +125,11 @@ function getMonthInfo(data, filterState, { yearHead, monthHead }) {
       }
     });
   }
-
   return [monthTransactions, days, paidSum, recievedSum];
 }
 
 function getDays(monthTransactions, day) {
-  const dayInfo = new Array();
+  const dayInfo = [];
   dayInfo.splice(0, dayInfo.length);
   monthTransactions.forEach((m) => {
     if (m["day"] == day) {
@@ -180,10 +174,8 @@ function currentDate() {
   return moment(Date.now()).format("jYYYY/jMM/jDD");
 }
 
-export default function Transaction() {
+function Transaction() {
   const data = useSelector(listData);
-  console.log(data);
-  const dispatch = useDispatch();
   const classes = useStyles();
   const [isNewTransactionDialogOpen, newTransactionDialogSetState] =
     React.useState(false);
@@ -213,8 +205,6 @@ export default function Transaction() {
     filterState,
     dateState
   );
-
-  console.log(daysSet);
 
   function optionPressed(filter) {
     if (filterState.paidState == false && filterState.recievedState == false) {
@@ -421,3 +411,4 @@ export default function Transaction() {
     </div>
   );
 }
+export default Transaction;

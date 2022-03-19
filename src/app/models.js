@@ -6,16 +6,7 @@ export function getNextTransactionSequenceId() {
 }
 
 export class TransactionModel {
-  constructor(
-    id,
-    type,
-    price,
-    note,
-    category,
-    year,
-    month,
-    day,
-  ) {
+  constructor(id, type, price, note, category, year, month, day) {
     this.id = id;
     this.type = type;
     this.price = price;
